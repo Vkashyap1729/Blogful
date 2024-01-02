@@ -1,0 +1,33 @@
+.card-header,.card-footer,.card{
+    background-color: white;
+    border: 0;
+}
+.main-body-display-image{
+    width: 100%;
+    height: auto;
+    border: 2px solid black;
+}
+.sub-body-main-image{
+    width: 100%;
+    height: auto;
+    border: 2px solid black;
+}
+.img-fluid{
+    display: block;
+    margin: auto;
+}
+.main-body,.sub-body{
+    margin: 10px;
+}
+.body-btn-content{
+    height: 380px;
+    position: relative;
+}
+.main-body-btn{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}

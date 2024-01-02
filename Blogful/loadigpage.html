@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data with Loading Screen</title>
+    <style>
+        /* Style for the loading screen */
+        #loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: grey;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading-message {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading screen -->
+    <div id="loading-screen">
+        <p id="loading-message">Loading...</p>
+    </div>
+    <h1>
+        hello world 
+    </h1>
+
+    <!-- Your HTML content here -->
+
+    <script>
+        // Function to show the loading screen
+        function showLoadingScreen() {
+            document.getElementById('loading-screen').style.display = 'flex';
+        }
+
+        // Function to hide the loading screen
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').style.display = 'none';
+        }
+
+        // Function to fetch data
+        let jsonData = []
+        async function fetchData() {
+            try {
+                // Show loading screen
+                showLoadingScreen();
+
+                // Simulate a delay of 2 seconds (replace with actual fetch)
+                setTimeout(async () => {
+                    const response = await fetch('Assets/data.json');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+                    }
+                    jsonData = await response.json();
+                    console.log('Fetched JSON data:', jsonData);
+
+                    // Call a function to handle the fetched data
+                    handleData(jsonData);
+
+                    // Hide loading screen
+                    hideLoadingScreen();
+                }, 2000); // 2000 milliseconds (2 seconds)
+            } catch (error) {
+                console.error('Error fetching data:', error.message);
+                // Optionally handle errors and hide loading screen
+                hideLoadingScreen();
+            }
+        }
+
+        // Function to handle the fetched data
+        function handleData(data) {
+            console.log('Handling data:', data);
+            // You can perform further operations with the data here
+            console.log("object is " ,data[0])
+        }
+
+        // Fetch data on window load
+        window.onload = fetchData
+    </script>
+
+</body>
+</html>

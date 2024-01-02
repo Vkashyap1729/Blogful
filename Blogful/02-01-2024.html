@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Background Color</title>
+    <style>
+        body {
+            transition: background-color 0.5s;
+        }
+
+        /* You can adjust the background color as needed */
+        .custom-background {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <label for="backgroundCheckbox">Change Background Color</label>
+    <input type="checkbox" id="backgroundCheckbox">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const backgroundCheckbox = document.getElementById('backgroundCheckbox');
+
+            // Toggle background color on checkbox change
+            backgroundCheckbox.addEventListener('change', function () {
+                document.body.classList.toggle('custom-background', backgroundCheckbox.checked);
+            });
+        });
+    </script>
+</body>
+</html>

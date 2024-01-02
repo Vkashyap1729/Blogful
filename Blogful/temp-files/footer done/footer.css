@@ -1,0 +1,44 @@
+.footer{
+    margin-top: 100px;
+    margin-bottom:100px;
+}
+.footer-social-media{
+    height:30px;
+    width: 30px;
+    margin-top: 15px;
+}
+.footer-social-media-block{
+    margin-top: 80px;
+}
+#footer-links{
+    text-decoration: none;
+    color: black;
+    margin: 100px;
+}
+.footer-email-block{
+    margin-top: 20px;
+}
+.footer-email-block>input{
+    width: 240px;
+    height: 40px;
+}
+.footer-email-block>.btn{
+    width: 87px;
+    height: 36px;
+}
+#footer-switch{
+    color: #2D2D2D;
+    /* H2 - small regular */
+    /* font-family: Epilogue; */
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 400;
+    margin-left: -7%;
+    line-height: 1.875rem; /* 150% */
+}
+.text-switch{
+    margin-left: 0%;
+}
+.act-switch{
+    margin-left: 0%;
+}

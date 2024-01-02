@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogful</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        #suggestionContainer {
+            position: absolute;
+            top: 80px; /* Adjust this value based on your navigation bar height */
+            left: 0;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        #suggestionList {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        body {
+        margin: 0;
+        padding: 0;
+        }   
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        li {
+            margin: 0;
+        }
+        .nav-link {
+            font-size: 18px;
+            font : Epilogue;    
+            text-decoration: none;
+            color: #fff;
+            padding: 15px;
+            display: block;
+            position: relative;
+        }
+        .nav-link:hover{
+            color: white ;
+        }
+        .nav-link::after {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0px ;
+            right: 0px;
+            bottom: -3px;
+            height: 3px;
+            margin: 5px;
+            background-color: white;
+            visibility: hidden;
+        }
+        .nav-link:hover::after {
+            visibility: visible;
+        }
+        #search-icon{
+            width: 22.03px;
+            height: 24px;
+            top: 2px;
+            left: 3px;
+        }
+        .nav-item{
+            margin-left: 2vw;
+        }
+        .logo{
+            font-size: 18px;
+            font : Epilogue;
+        }
+        .navbar{
+            margin-bottom: 160px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation bar with search bar -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="#" id="logo">Blogful</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showAllEntries()">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showEntriesByCategory('culture')">Culture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showEntriesByCategory('idea')">Ideas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" 
+                        onclick="showEntriesByCategory('technology')">Technology</a>
+                    </li>
+                </ul>
+                <form class="d-flex ">
+                    <input type="text" id="searchInput" class="form-control me-2" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Suggestions container -->
+    <div id="suggestionContainer">
+        <ul id="suggestionList" class="list-group"></ul>
+    </div>
+
+    <div class="row" id="entryContainer">
+        <!-- Entry cards will be inserted here -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dummy JSON data
+        let jsonData = [];
+
+        async function fetchData() {
+            try {
+                const response = await fetch('Assets/data.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data. Status: ${response.status}`);
+                }
+                jsonData = await response.json();
+                console.log('Fetched JSON data:', jsonData);
+            } catch (error) {
+                console.error('Error fetching data:', error.message);
+            }
+        }
+
+        fetchData();
+
+        // Event listener for input changes
+        const searchInput = document.getElementById('searchInput');
+        const suggestionContainer = document.getElementById('suggestionContainer');
+        const entryContainer = document.getElementById('entryContainer');
+        
+
+        searchInput.addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+
+            // Display suggestions if search value is not empty, otherwise hide suggestions
+            if (searchValue.trim() !== '') {
+                const suggestions = getMatchingSuggestions(searchValue);
+                displaySuggestions(suggestions);
+                suggestionContainer.style.display = 'block';
+            } else {
+                suggestionContainer.style.display = 'none';
+            }
+        });
+
+        // Handle focusing on search input
+        searchInput.addEventListener('focus', function () {
+            const searchValue = this.value.toLowerCase();
+
+            // Display suggestions if search value is not empty, otherwise hide suggestions
+            if (searchValue.trim() !== '') {
+                const suggestions = getMatchingSuggestions(searchValue);
+                displaySuggestions(suggestions);
+                suggestionContainer.style.display = 'block';
+            }
+        });
+
+        // Function to filter suggestions based on search value
+        function getMatchingSuggestions(searchValue) {
+            return jsonData.filter(entry => {
+                // Check if the searchValue exists in any key of the entry
+                for (const key in entry) {
+                    if (String(entry[key]).toLowerCase().includes(searchValue)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        // Function to display suggestions in the list
+        function displaySuggestions(suggestions) {
+            const suggestionList = document.getElementById('suggestionList');
+
+            // Clear previous suggestions
+            suggestionList.innerHTML = '';
+
+            // Display new suggestions
+            suggestions.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                listItem.textContent = item.title;
+                suggestionList.appendChild(listItem);
+            });
+        }
+
+        // Event listener to handle suggestion selection
+        suggestionContainer.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                const selectedValue = event.target.textContent;
+                // Perform action with the selected value, e.g., navigate to a page or perform a search
+                console.log("Selected Value:", selectedValue);
+                // Clear the search input and hide suggestions
+                searchInput.value = '';
+                suggestionContainer.style.display = 'none';
+            }
+        });
+        // Function to show all entries
+        function showAllEntries() {
+            displayEntries(jsonData);
+        }
+
+        // Function to show entries by category
+        function showEntriesByCategory(category) {
+            const filteredEntries = jsonData.filter(entry => entry.tag_name === category);
+            displayEntries(filteredEntries);
+        }
+
+        // Function to display entries
+        function displayEntries(entries) {
+            entryContainer.innerHTML = '';
+
+            entries.forEach(entry => {
+                const entryCard = createEntryCard(entry);
+                entryContainer.appendChild(entryCard);
+            });
+        }
+        function createEntryCard(entry) {
+            const card = document.createElement('div');
+            card.classList.add('card', 'entry-card' , 'col-md-6');
+
+            const cardImg = document.createElement('img');
+            cardImg.classList.add('card-img-top');
+            cardImg.src = entry.img_link;
+            card.appendChild(cardImg);
+
+            const cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+
+            const cardTitle = document.createElement('h5');
+            cardTitle.classList.add('card-title');
+            cardTitle.textContent = entry.title;
+
+            const cardContent = document.createElement('p');
+            cardContent.classList.add('card-text');
+            cardContent.textContent = entry.content;
+
+            const cardAuthor = document.createElement('p');
+            cardAuthor.classList.add('card-text', 'text-muted');
+            cardAuthor.textContent = `${entry.author_data.full_name}, ${entry.author_data.job_title} | ${entry.author_data.read_time} | ${entry.author_data.date}`;
+
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardContent);
+            cardBody.appendChild(cardAuthor);
+
+            card.appendChild(cardBody);
+
+            return card;
+        }
+    </script>
+</body>
+</html>
